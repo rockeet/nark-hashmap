@@ -4,6 +4,7 @@
 #include <nark/config.hpp>
 #include <nark/node_layout.hpp>
 #include <nark/stdtypes.hpp>
+#include <nark/bits_rotate.hpp>
 #include <algorithm>
 
 #if defined(_MSC_VER)
