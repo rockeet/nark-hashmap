@@ -1039,6 +1039,10 @@ private:
 				}
 		}
 		nElem = i;
+		if (0 == i) { // all elements are erased
+			this->destroy();
+			this->init();
+		}
 		return n - i; // erased elements count
 	}
 
@@ -1071,6 +1075,10 @@ private:
 				nl.data(j).~Elem();
 		}
 		nElem = i;
+		if (0 == i) { // all elements are erased
+			this->destroy();
+			this->init();
+		}
 		return n - i; // erased elements count
 	}
 
