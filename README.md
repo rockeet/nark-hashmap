@@ -1,7 +1,7 @@
 nark-hashmap
 ============
 
-Very fast and small(memory efficient) hash map
+A very fast and small(memory efficient) hash map: [Bechmark](http://nark.cc/p/?p=142)
 
 ## Quick Start
 
