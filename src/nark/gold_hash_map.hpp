@@ -12,6 +12,9 @@
 #elif defined(__GNUC__) && __GNUC__ * 1000 + __GNUC_MINOR__ < 4001
 	#include <ext/hash_map>
 	#define DEFAULT_HASH_FUNC __gnu_cxx::hash
+#elif defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103 || defined(_LIBCPP_VERSION)
+	#include <unordered_map>
+	#define DEFAULT_HASH_FUNC std::hash
 #else
 	#include <tr1/unordered_map>
 	#define DEFAULT_HASH_FUNC std::tr1::hash

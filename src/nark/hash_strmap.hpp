@@ -210,7 +210,7 @@ protected:
 		load_factor = 0.3;
 		sort_flag = en_unsorted;
 
-		enable_freelist(256);
+//		enable_freelist(256);
 	}
 
 	Value& nth_value(size_t nth, ValueInline) const { return pNodes[nth].value; }
@@ -1592,6 +1592,22 @@ public:
 		HSM_SANITY(mybeg < myend);
 		HSM_SANITY(myend <= lenpool);
 		return mylen;
+	}
+	size_t key_offset(size_t idx) const {
+		HSM_SANITY(nNodes >= 1);
+		assert(idx < nNodes);
+		size_t mybeg = LOAD_OFFSET(pNodes[idx+0].offset);
+		HSM_SANITY(mybeg < lenpool);
+		return mybeg;
+	}
+	size_t key_offset_raw(size_t idx) const {
+	#if !defined(NDEBUG)
+		HSM_SANITY(nNodes >= 1);
+		assert(idx < nNodes);
+		size_t mybeg = LOAD_OFFSET(pNodes[idx+0].offset);
+		HSM_SANITY(mybeg < lenpool);
+	#endif
+		return pNodes[idx+0].offset;
 	}
 	fstring key(size_t idx) const {
 		HSM_SANITY(nNodes >= 1);
