@@ -7,11 +7,6 @@
 #include <nark/bits_rotate.hpp>
 #include <algorithm>
 
-#if defined(_MSC_VER)
-// Seems Visual C++ didn't optimize rotate shift, so use intrinsics
-#include <stdlib.h> // for rol/ror intrinsics
-#endif
-
 // HSM_ : Hash String Map
 #define HSM_SANITY assert
 
@@ -128,6 +123,15 @@ struct hash_and_equal : private Hash, private Equal {
 	bool  equal(const Key& x, const Key& y) const {
 	   	return Equal::operator()(x, y);
    	}
+
+	template<class OtherKey>
+	size_t hash(const OtherKey& x) const { return Hash::operator()(x); }
+
+	template<class Key1, class Key2>
+	bool  equal(const Key1& x, const Key2& y) const {
+	   	return Equal::operator()(x, y);
+   	}
+
 	hash_and_equal() {}
 	hash_and_equal(const Hash& h, const Equal& eq) : Hash(h), Equal(eq) {}
 };

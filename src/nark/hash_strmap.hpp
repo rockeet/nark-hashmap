@@ -622,6 +622,8 @@ public:
 		std::swap(equal    , y.equal);
 	}
 
+	fstring whole_strpool() const { return fstring(strpool, lenpool); }
+
 	void clear() {
 		destroy();
 		init();
@@ -697,7 +699,7 @@ public:
 		}
 	//	disable_hash_cache(); // ? OR:
 		if (intptr_t(pHash) == hash_cache_disabled)
-			;
+		{}
 		else if (NULL != pHash)
 			::free(pHash), pHash = NULL;
 	//	if (pLink) // has no pLink
@@ -819,7 +821,7 @@ public:
 		maxload = &tail == bucket ? 0
 				: LinkTp(min<double>(nBucket * fact, maxlink));
 	}
-	void get_load_factor() const { return load_factor; }
+	double get_load_factor() const { return load_factor; }
 
 	HashTp hash_value(size_t i) const {
 		assert(i < nNodes);
@@ -916,6 +918,19 @@ public:
 	Value& val(size_t idx) {
 		HSM_SANITY(nNodes >= 1);
 		assert(idx < nNodes);
+		return nth_value(idx, ValuePlace());
+	}
+
+	const Value& end_val(size_t idxEnd) const {
+		HSM_SANITY(nNodes >= 1);
+		assert(idxEnd <= nNodes);
+		size_t idx = nNodes - idxEnd;
+		return nth_value(idx, ValuePlace());
+	}
+	Value& end_val(size_t idxEnd) {
+		HSM_SANITY(nNodes >= 1);
+		assert(idxEnd <= nNodes);
+		size_t idx = nNodes - idxEnd;
 		return nth_value(idx, ValuePlace());
 	}
 
@@ -1050,7 +1065,7 @@ private:
 				const fstring mykey(ps + mybeg, mylen-extra);
 				Value& myval = nth_value(pn, pv, j); // non-const
 				if (delmark == pn[j].link)
-					; // do nothing
+				{} // do nothing
 				else if (pred(mykey, myval))
 					nth_value(pn, pv, j).~Value(); // destruct
 				else {
@@ -1612,6 +1627,19 @@ public:
 	fstring key(size_t idx) const {
 		HSM_SANITY(nNodes >= 1);
 		assert(idx < nNodes);
+		size_t mybeg = LOAD_OFFSET(pNodes[idx+0].offset);
+		size_t myend = LOAD_OFFSET(pNodes[idx+1].offset);
+		size_t extra = extralen(myend);
+		size_t mylen = myend - mybeg - extra;
+		HSM_SANITY(mybeg < myend);
+		HSM_SANITY(myend <= lenpool);
+		return fstring(strpool + mybeg, mylen);
+	}
+
+	fstring end_key(size_t idxEnd) const {
+		HSM_SANITY(nNodes >= 1);
+		assert(idxEnd <= nNodes);
+		size_t idx = nNodes - idxEnd;
 		size_t mybeg = LOAD_OFFSET(pNodes[idx+0].offset);
 		size_t myend = LOAD_OFFSET(pNodes[idx+1].offset);
 		size_t extra = extralen(myend);
@@ -2520,7 +2548,7 @@ public:
 	}
 
 	template<class DataIO>
-	void load_fast(DataIO& dio) {
+	void dio_load_fast(DataIO& dio) {
 		typename DataIO::my_var_uint64_t Size;
 		typename DataIO::my_var_uint64_t StrPoolSize;
 		dio >> Size;
@@ -2529,13 +2557,13 @@ public:
 		dio.load_is_undefined_for_hash_strmap();
 	}
 	template<class DataIO>
-	void save_fast(DataIO& dio) const {
+	void dio_save_fast(DataIO& dio) const {
 		dio.load_is_undefined_for_hash_strmap();
 	}
 
 	// compatible format (compatible to std::map/std::vector ...)
 	template<class DataIO>
-	void load(DataIO& dio) {
+	void dio_load(DataIO& dio) {
 		typename DataIO::my_var_uint64_t Size;
 		clear();
 		dio >> Size;
@@ -2549,7 +2577,7 @@ public:
 		}
 	}
 	template<class DataIO>
-	void save(DataIO& dio) const {
+	void dio_save(DataIO& dio) const {
 		dio << typename DataIO::my_var_uint64_t(this->size());
 		if (this->nDeleted) {
 			for (size_t i = 0, n = this->end_i(); i < n; ++i) {
@@ -2568,11 +2596,11 @@ public:
 
 	template<class DataIO>
 	friend void DataIO_loadObject(DataIO& dio, hash_strmap& self) {
-		self.load(dio);
+		self.dio_load(dio);
 	}
 	template<class DataIO>
 	friend void DataIO_saveObject(DataIO& dio, const hash_strmap& self) {
-		self.save(dio);
+		self.dio_save(dio);
 	}
 };
 
@@ -2620,6 +2648,15 @@ public:
 	explicit
 	fast_hash_strmap(size_t cap, KeyHash hash=KeyHash(), KeyEqual eq=KeyEqual())
 	  : super(cap, hash, eq) {}
+
+	template<class DataIO>
+	friend void DataIO_loadObject(DataIO& dio, fast_hash_strmap& self) {
+		self.dio_load(dio);
+	}
+	template<class DataIO>
+	friend void DataIO_saveObject(DataIO& dio, const fast_hash_strmap& self) {
+		self.dio_save(dio);
+	}
 };
 #endif
 
