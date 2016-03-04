@@ -30,10 +30,10 @@ __hsm_stl_next_prime(size_t __n)
 		786433ul,     1572869ul,    3145739ul,    6291469ul,   12582917ul,
 		25165843ul,   50331653ul,   100663319ul,  201326611ul, 402653189ul,
 		805306457ul,  1610612741ul, 3221225473ul, 4294967291ul,
-#ifndef FEBIRD_WORD_BITS
-	#error "FEBIRD_WORD_BITS is not defined"
+#ifndef NARK_WORD_BITS
+	#error "NARK_WORD_BITS is not defined"
 #endif
-#if	FEBIRD_WORD_BITS == 64
+#if	NARK_WORD_BITS == 64
       /* 30    */ (size_t)8589934583ull,
       /* 31    */ (size_t)17179869143ull,
       /* 32    */ (size_t)34359738337ull,
@@ -66,7 +66,7 @@ __hsm_stl_next_prime(size_t __n)
       /* 59    */ (size_t)4611686018427387847ull,
       /* 60    */ (size_t)9223372036854775783ull,
       /* 61    */ (size_t)18446744073709551557ull,
-#endif // FEBIRD_WORD_BITS == 64
+#endif // NARK_WORD_BITS == 64
 	};
 	const size_t* __first = primes;
 	const size_t* __last = primes + sizeof(primes)/sizeof(primes[0]);

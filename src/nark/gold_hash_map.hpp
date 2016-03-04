@@ -79,7 +79,7 @@ public:
 	typedef std::reverse_iterator<      fast_iterator>       fast_reverse_iterator;
 	typedef std::reverse_iterator<const_fast_iterator> const_fast_reverse_iterator;
 
-#ifdef FEBIRD_GOLD_HASH_MAP_ITERATOR_USE_FAST
+#ifdef NARK_GOLD_HASH_MAP_ITERATOR_USE_FAST
 	typedef       fast_iterator       iterator;
 	typedef const_fast_iterator const_iterator;
 	      iterator get_iter(size_t idx)       { return m_nl.begin() + idx; }
@@ -582,7 +582,7 @@ public:
 		}
 	}
 
-#ifndef FEBIRD_GOLD_HASH_MAP_ITERATOR_USE_FAST
+#ifndef NARK_GOLD_HASH_MAP_ITERATOR_USE_FAST
 	void erase(iterator iter) {
 		assert(iter.get_owner() == this);
 		assert(!m_nl.is_null());

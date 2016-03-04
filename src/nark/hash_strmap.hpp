@@ -2617,7 +2617,7 @@ class hash_strmap_p : public nark_ptr_hash_map
 // replace all "std::unordered_map" as fast_hash_strmap in your source code
 // which Key is std::string, you will get the advantage of hash_strmap
 // if you don't want to use hash_strmap, just define the macro:
-#ifdef DONT_USE_FEBIRD_fast_hash_strmap
+#ifdef DONT_USE_NARK_fast_hash_strmap
 	#define fast_hash_strmap std::unordered_map
 #else
 template< class Key // dummy for compatible with unordered_map<string,Value>
