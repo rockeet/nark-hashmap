@@ -1,5 +1,6 @@
 nark-hashmap
 ============
+## Now the newest version is in [topling-ark](https://github.com/topling/topling-ark)
 
 A very fast and small(memory efficient) hash map: [Bechmark](http://nark.cc/p/?p=142)
 
